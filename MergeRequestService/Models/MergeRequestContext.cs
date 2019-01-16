@@ -13,6 +13,6 @@ namespace MergeRequestService.Models
 
         public DbSet<MergeRequest> MergeRequests { get; set; }
 
-        public DbSet<MergeRequestService.Models.MergeRequestMail> MergeRequestMail { get; set; }
+        public DbSet<MailSendingJob> MailSendingJobs { get; set; }
     }
 }
