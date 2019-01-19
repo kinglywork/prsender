@@ -2,12 +2,14 @@
 using System.Linq;
 using MergeRequestService.Models;
 using MergeRequestService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace MergeRequestService.Controllers
 {
+    [Authorize] // todo admin only
     public class MergeRequestMailPreviewController : Controller
     {
         private readonly MergeRequestContext _context;

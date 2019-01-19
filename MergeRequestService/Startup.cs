@@ -38,8 +38,11 @@ namespace MergeRequestService
             services.AddDbContext<MergeRequestContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+            
+//            services.AddHangfire(config =>
+//                config.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<IdentityUser>()//todo disable register
                 .AddEntityFrameworkStores<MergeRequestContext>();
 
             services.Configure<MailMessageConfig>(Configuration.GetSection(nameof(MailMessageConfig)));
@@ -47,6 +50,7 @@ namespace MergeRequestService
 
             services.AddTransient<IMergeRequestMailSender, MergeRequestMailSender>();
             services.AddTransient<IMergeRequestMailContentGenerator, MergeRequestMailContentGenerator>();
+            services.AddTransient<IMailContentTemplate, MailContentTextTemplate>();
             services.AddTransient<ITargetBranchListFactory, TargetBranchListFactory>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -77,6 +81,10 @@ namespace MergeRequestService
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            
+//            app.UseHangfireDashboard();
+//            app.UseHangfireServer();
+            //todo hangfire is admin only 
         }
     }
 }

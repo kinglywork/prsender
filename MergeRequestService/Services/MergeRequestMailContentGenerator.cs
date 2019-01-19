@@ -11,6 +11,13 @@ namespace MergeRequestService.Services
 {
     public class MergeRequestMailContentGenerator : IMergeRequestMailContentGenerator
     {
+        private readonly IMailContentTemplate _mailContentTemplate;
+
+        public MergeRequestMailContentGenerator(IMailContentTemplate mailContentTemplate)
+        {
+            _mailContentTemplate = mailContentTemplate;
+        }
+
         public string Generate(List<MergeRequest> mergeRequests)
         {
             var contentBuilder = new StringBuilder();
@@ -21,7 +28,7 @@ namespace MergeRequestService.Services
             return contentBuilder.ToString();
         }
 
-        private static void AddQaChangeSets(StringBuilder contentBuilder, List<MergeRequest> mergeRequests, string qaBranchName)
+        private void AddQaChangeSets(StringBuilder contentBuilder, List<MergeRequest> mergeRequests, string qaBranchName)
         {
             var requestsMergeToQa = RequestsMergeToTargetBranch(mergeRequests, qaBranchName);
             if (!requestsMergeToQa.Any())
@@ -39,14 +46,14 @@ namespace MergeRequestService.Services
                     ChangeSets = string.Join(',', qaGroup.OrderBy(r => r.DevChangeSetId).Select(r => r.DevChangeSetId).Distinct())
                 };
 
-            contentBuilder.AppendLine("DEV -> QA:");
+            contentBuilder.AppendLine(_mailContentTemplate.GenerateSectionTitle("DEV", "QA"));
             qaChangeSets.ToList()
-                .ForEach(changeSetGroup => { contentBuilder.AppendLine($"{changeSetGroup.SourceBranch}: {changeSetGroup.ChangeSets}"); });
+                .ForEach(changeSetGroup => { contentBuilder.AppendLine(_mailContentTemplate.GenerateQaChangeSet(changeSetGroup.SourceBranch, changeSetGroup.ChangeSets)); });
 
-            contentBuilder.AppendLine();
+            contentBuilder.Append(_mailContentTemplate.GenerateNewLine());
         }
 
-        private static void AddDevChangeSets(StringBuilder contentBuilder, List<MergeRequest> mergeRequests, string devBranchName)
+        private void AddDevChangeSets(StringBuilder contentBuilder, List<MergeRequest> mergeRequests, string devBranchName)
         {
             var requestsMergeToDev = RequestsMergeToTargetBranch(mergeRequests, devBranchName);
             if (!requestsMergeToDev.Any())
@@ -67,16 +74,15 @@ namespace MergeRequestService.Services
             devChangeSets.ToList()
                 .ForEach(changeSetGroup =>
                 {
-                    contentBuilder.AppendLine($"<div>{changeSetGroup.SourceBranch} -> DEV:</div>");
-                    changeSetGroup.Requests.OrderBy(r => r.ChangeSetId).ToList().ForEach(request =>
-                    {
-                        contentBuilder.AppendLine($"<div>{request.ChangeSetId} {request.Memo}</div>");
-                    });
-                    contentBuilder.AppendLine("<br>");
+                    contentBuilder.AppendLine(_mailContentTemplate.GenerateSectionTitle(changeSetGroup.SourceBranch, "DEV"));
+                    changeSetGroup.Requests
+                        .OrderBy(r => r.ChangeSetId)
+                        .ToList().ForEach(request => { contentBuilder.AppendLine(_mailContentTemplate.GenerateDevChangeSet(request.ChangeSetId.ToString(), request.Memo)); });
+                    contentBuilder.Append(_mailContentTemplate.GenerateNewLine());
                 });
         }
 
-        private static List<MergeRequest> RequestsMergeToTargetBranch(List<MergeRequest> mergeRequests, string devBranchName)
+        private static List<MergeRequest> RequestsMergeToTargetBranch(IEnumerable<MergeRequest> mergeRequests, string devBranchName)
         {
             return mergeRequests
                 .Where(r => string.Equals(r.TargetBranch, devBranchName, StringComparison.InvariantCultureIgnoreCase))

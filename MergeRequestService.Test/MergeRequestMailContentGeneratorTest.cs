@@ -14,7 +14,7 @@ namespace MergeRequestService.Test
         [TestInitialize]
         public void Initialize()
         {
-            _mergeRequestMailContentGenerator = new MergeRequestMailContentGenerator();
+            _mergeRequestMailContentGenerator = new MergeRequestMailContentGenerator(new MailContentTextTemplate());
         }
 
         [TestMethod]

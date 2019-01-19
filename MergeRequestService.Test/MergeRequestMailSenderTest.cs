@@ -10,7 +10,7 @@ namespace MergeRequestService.Test
     [TestClass]
     public class MergeRequestMailSenderTest
     {
-        [TestMethod]
+//        [TestMethod] need valid config to run
         public void TestSendingMail()
         {
             //if use gmail smtp, turn on this setting to allow sending mail by app
