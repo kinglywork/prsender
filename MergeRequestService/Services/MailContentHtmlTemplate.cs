@@ -9,22 +9,22 @@ namespace MergeRequestService.Services
     {
         public string GenerateSectionTitle(string fromBranch, string toBranch)
         {
-            throw new NotImplementedException();
+            return $"<div><strong><u>{fromBranch} -> {toBranch}:</u></strong></div>";
         }
 
         public string GenerateQaChangeSet(string sourceBranch, string devChangeSetIds)
         {
-            throw new NotImplementedException();
+            return $"<div>{sourceBranch}: {devChangeSetIds}</div>";
         }
 
         public string GenerateDevChangeSet(string changeSetId, string memo)
         {
-            throw new NotImplementedException();
+            return $"<div>{changeSetId} {memo}</div>";
         }
 
         public string GenerateNewLine()
         {
-            throw new NotImplementedException();
+            return "<br>";
         }
     }
 }

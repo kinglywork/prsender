@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MergeRequestService.Test
 {
     [TestClass]
-    public class MergeRequestMailContentGeneratorTest
+    public class MergeRequestMailContentTextGeneratorTest
     {
         private MergeRequestMailContentGenerator _mergeRequestMailContentGenerator;
 
