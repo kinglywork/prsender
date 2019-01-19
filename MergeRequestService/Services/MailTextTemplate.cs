@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MergeRequestService.Services
 {
-    public class MailContentTextTemplate : IMailContentTemplate
+    public class MailTextTemplate : IMailTemplate
     {
         public string GenerateSectionTitle(string fromBranch, string toBranch)
         {
@@ -25,6 +25,19 @@ namespace MergeRequestService.Services
         public string GenerateNewLine()
         {
             return Environment.NewLine;
+        }
+
+        public string GenerateMailBody(string mergeRequests)
+        {
+            return $@"Hi team,
+
+Please review and help to merge the change sets below:
+
+{mergeRequests}
+
+Thanks
+ECSI CN Team
+";
         }
     }
 }

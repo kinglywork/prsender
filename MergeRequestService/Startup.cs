@@ -49,8 +49,9 @@ namespace MergeRequestService
             services.Configure<MailServerConfig>(Configuration.GetSection(nameof(MailServerConfig)));
 
             services.AddTransient<IMergeRequestMailSender, MergeRequestMailSender>();
-            services.AddTransient<IMergeRequestMailContentGenerator, MergeRequestMailContentGenerator>();
-            services.AddTransient<IMailContentTemplate, MailContentTextTemplate>();
+            services.AddTransient<IMergeRequestMailGenerator, MergeRequestMailGenerator>();
+            //todo use html template
+            services.AddTransient<IMailTemplate, MailHtmlTemplate>();
             services.AddTransient<ITargetBranchListFactory, TargetBranchListFactory>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

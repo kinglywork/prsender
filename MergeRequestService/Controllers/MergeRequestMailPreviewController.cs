@@ -14,29 +14,31 @@ namespace MergeRequestService.Controllers
     {
         private readonly MergeRequestContext _context;
         private readonly IOptions<MailMessageConfig> _mailConfig;
-        private readonly IMergeRequestMailContentGenerator _mergeRequestMailContentGenerator;
+        private readonly IMergeRequestMailGenerator _mergeRequestMailGenerator;
 
         private DateTime Now => DateTime.Now;
 
         public MergeRequestMailPreviewController(MergeRequestContext context,
             IOptions<MailMessageConfig> mailConfig,
-            IMergeRequestMailContentGenerator mergeRequestMailContentGenerator)
+            IMergeRequestMailGenerator mergeRequestMailGenerator)
         {
             _context = context;
             _mailConfig = mailConfig;
-            _mergeRequestMailContentGenerator = mergeRequestMailContentGenerator;
+            _mergeRequestMailGenerator = mergeRequestMailGenerator;
         }
 
         public IActionResult Index()
         {
             var mergeRequests = _context.MergeRequests.Where(r => r.SubmitAt < Now.AddDays(1).Date && r.SubmitAt >= Now.Date).ToList();
+            var mergeRequestsContent = _mergeRequestMailGenerator.GenerateMergeRequests(mergeRequests);
+            var mailBody = _mergeRequestMailGenerator.GenerateMailBody(mergeRequestsContent);
 
             var mail = new MergeRequestMail
             {
                 Receiver = _mailConfig.Value.Receiver,
                 Cc = _mailConfig.Value.Cc,
                 Subject = string.Format(_mailConfig.Value.SubjectTemplate, Now),
-                Content = _mergeRequestMailContentGenerator.Generate(mergeRequests)
+                Content = mailBody
             };
 
             return View(mail);

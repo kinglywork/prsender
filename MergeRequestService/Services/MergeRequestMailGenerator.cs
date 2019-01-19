@@ -9,16 +9,16 @@ using Microsoft.Extensions.Configuration;
 
 namespace MergeRequestService.Services
 {
-    public class MergeRequestMailContentGenerator : IMergeRequestMailContentGenerator
+    public class MergeRequestMailGenerator : IMergeRequestMailGenerator
     {
-        private readonly IMailContentTemplate _mailContentTemplate;
+        private readonly IMailTemplate _mailTemplate;
 
-        public MergeRequestMailContentGenerator(IMailContentTemplate mailContentTemplate)
+        public MergeRequestMailGenerator(IMailTemplate mailTemplate)
         {
-            _mailContentTemplate = mailContentTemplate;
+            _mailTemplate = mailTemplate;
         }
 
-        public string Generate(List<MergeRequest> mergeRequests)
+        public string GenerateMergeRequests(List<MergeRequest> mergeRequests)
         {
             var contentBuilder = new StringBuilder();
 
@@ -26,6 +26,11 @@ namespace MergeRequestService.Services
             AddDevChangeSets(contentBuilder, mergeRequests, TargetBranchListFactory.BranchDev);
 
             return contentBuilder.ToString();
+        }
+
+        public string GenerateMailBody(string mergeRequests)
+        {
+            return _mailTemplate.GenerateMailBody(mergeRequests);
         }
 
         private void AddQaChangeSets(StringBuilder contentBuilder, List<MergeRequest> mergeRequests, string qaBranchName)
@@ -46,11 +51,11 @@ namespace MergeRequestService.Services
                     ChangeSets = string.Join(',', qaGroup.OrderBy(r => r.DevChangeSetId).Select(r => r.DevChangeSetId).Distinct())
                 };
 
-            contentBuilder.AppendLine(_mailContentTemplate.GenerateSectionTitle("DEV", "QA"));
+            contentBuilder.AppendLine(_mailTemplate.GenerateSectionTitle("DEV", "QA"));
             qaChangeSets.ToList()
-                .ForEach(changeSetGroup => { contentBuilder.AppendLine(_mailContentTemplate.GenerateQaChangeSet(changeSetGroup.SourceBranch, changeSetGroup.ChangeSets)); });
+                .ForEach(changeSetGroup => { contentBuilder.AppendLine(_mailTemplate.GenerateQaChangeSet(changeSetGroup.SourceBranch, changeSetGroup.ChangeSets)); });
 
-            contentBuilder.Append(_mailContentTemplate.GenerateNewLine());
+            contentBuilder.Append(_mailTemplate.GenerateNewLine());
         }
 
         private void AddDevChangeSets(StringBuilder contentBuilder, List<MergeRequest> mergeRequests, string devBranchName)
@@ -74,11 +79,11 @@ namespace MergeRequestService.Services
             devChangeSets.ToList()
                 .ForEach(changeSetGroup =>
                 {
-                    contentBuilder.AppendLine(_mailContentTemplate.GenerateSectionTitle(changeSetGroup.SourceBranch, "DEV"));
+                    contentBuilder.AppendLine(_mailTemplate.GenerateSectionTitle(changeSetGroup.SourceBranch, "DEV"));
                     changeSetGroup.Requests
                         .OrderBy(r => r.ChangeSetId)
-                        .ToList().ForEach(request => { contentBuilder.AppendLine(_mailContentTemplate.GenerateDevChangeSet(request.ChangeSetId.ToString(), request.Memo)); });
-                    contentBuilder.Append(_mailContentTemplate.GenerateNewLine());
+                        .ToList().ForEach(request => { contentBuilder.AppendLine(_mailTemplate.GenerateDevChangeSet(request.ChangeSetId.ToString(), request.Memo)); });
+                    contentBuilder.Append(_mailTemplate.GenerateNewLine());
                 });
         }
 

@@ -9,15 +9,18 @@
 <ul>
     <li>
         For team member:
-        <div>You can submit merge requests every day, review/update/delete your own merge requests submitted at today.</div>
+        <div>You can submit merge requests every day, review/update/delete your own merge requests submitted at today @Html.ActionLink("here", "Index", "MergeRequests").</div>
     </li>
     <li>
         For administrator:
         <div>
-            You can review/create/update/delete all the merge requests.
+            You can review/create/update/delete all the merge requests @Html.ActionLink("here", "Index", "MergeRequestsAdmin").
         </div>
         <div>
-            You can manage merge requests mail sending job.
+            You can preview today's merge request mail (sending to NA team) @Html.ActionLink("here", "Index", "MergeRequestMailPreview").
+        </div>
+        <div>
+            You can manage merge requests mail sending job @Html.ActionLink("here", "Index", "MailSendingJobs").
         </div>
     </li>
 </ul>

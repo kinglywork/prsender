@@ -9,12 +9,12 @@ namespace MergeRequestService.Test
     [TestClass]
     public class MergeRequestMailContentHtmlGeneratorTest
     {
-        private MergeRequestMailContentGenerator _mergeRequestMailContentGenerator;
+        private MergeRequestMailGenerator _mergeRequestMailGenerator;
 
         [TestInitialize]
         public void Initialize()
         {
-            _mergeRequestMailContentGenerator = new MergeRequestMailContentGenerator(new MailContentHtmlTemplate());
+            _mergeRequestMailGenerator = new MergeRequestMailGenerator(new MailHtmlTemplate());
         }
         
         [TestMethod]
@@ -78,7 +78,7 @@ namespace MergeRequestService.Test
                 }
             };
 
-            var content = _mergeRequestMailContentGenerator.Generate(mergeRequests);
+            var content = _mergeRequestMailGenerator.GenerateMergeRequests(mergeRequests);
 
             Assert.AreEqual(@"<div><strong><u>DEV -> QA:</u></strong></div>
 <div>PDM-144: 125,126</div>

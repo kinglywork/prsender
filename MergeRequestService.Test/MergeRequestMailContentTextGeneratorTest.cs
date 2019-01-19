@@ -9,12 +9,12 @@ namespace MergeRequestService.Test
     [TestClass]
     public class MergeRequestMailContentTextGeneratorTest
     {
-        private MergeRequestMailContentGenerator _mergeRequestMailContentGenerator;
+        private MergeRequestMailGenerator _mergeRequestMailGenerator;
 
         [TestInitialize]
         public void Initialize()
         {
-            _mergeRequestMailContentGenerator = new MergeRequestMailContentGenerator(new MailContentTextTemplate());
+            _mergeRequestMailGenerator = new MergeRequestMailGenerator(new MailTextTemplate());
         }
 
         [TestMethod]
@@ -33,7 +33,7 @@ namespace MergeRequestService.Test
                 }
             };
 
-            var content = _mergeRequestMailContentGenerator.Generate(mergeRequests);
+            var content = _mergeRequestMailGenerator.GenerateMergeRequests(mergeRequests);
 
             Assert.AreEqual(@"PDM-144 -> DEV:
 123 memo
@@ -66,7 +66,7 @@ namespace MergeRequestService.Test
                 }
             };
 
-            var content = _mergeRequestMailContentGenerator.Generate(mergeRequests);
+            var content = _mergeRequestMailGenerator.GenerateMergeRequests(mergeRequests);
 
             Assert.AreEqual(@"PDM-144 -> DEV:
 123 memo
@@ -102,7 +102,7 @@ PDM-145 -> DEV:
                 }
             };
 
-            var content = _mergeRequestMailContentGenerator.Generate(mergeRequests);
+            var content = _mergeRequestMailGenerator.GenerateMergeRequests(mergeRequests);
 
             Assert.AreEqual(@"PDM-144 -> DEV:
 123 memo
@@ -136,7 +136,7 @@ PDM-145 -> DEV:
                 }
             };
 
-            var content = _mergeRequestMailContentGenerator.Generate(mergeRequests);
+            var content = _mergeRequestMailGenerator.GenerateMergeRequests(mergeRequests);
 
             Assert.AreEqual(@"PDM-144 -> DEV:
 123 memo2
@@ -161,7 +161,7 @@ PDM-145 -> DEV:
                 }
             };
 
-            var content = _mergeRequestMailContentGenerator.Generate(mergeRequests);
+            var content = _mergeRequestMailGenerator.GenerateMergeRequests(mergeRequests);
 
             Assert.AreEqual(@"DEV -> QA:
 PDM-144: 125
@@ -194,7 +194,7 @@ PDM-144: 125
                 }
             };
 
-            var content = _mergeRequestMailContentGenerator.Generate(mergeRequests);
+            var content = _mergeRequestMailGenerator.GenerateMergeRequests(mergeRequests);
 
             Assert.AreEqual(@"DEV -> QA:
 PDM-144: 125,126
@@ -227,7 +227,7 @@ PDM-144: 125,126
                 }
             };
 
-            var content = _mergeRequestMailContentGenerator.Generate(mergeRequests);
+            var content = _mergeRequestMailGenerator.GenerateMergeRequests(mergeRequests);
 
             Assert.AreEqual(@"DEV -> QA:
 PDM-144: 125,126
@@ -260,7 +260,7 @@ PDM-144: 125,126
                 }
             };
 
-            var content = _mergeRequestMailContentGenerator.Generate(mergeRequests);
+            var content = _mergeRequestMailGenerator.GenerateMergeRequests(mergeRequests);
 
             Assert.AreEqual(@"DEV -> QA:
 PDM-144: 125
@@ -294,7 +294,7 @@ PDM-145: 126
                 }
             };
 
-            var content = _mergeRequestMailContentGenerator.Generate(mergeRequests);
+            var content = _mergeRequestMailGenerator.GenerateMergeRequests(mergeRequests);
 
             Assert.AreEqual(@"DEV -> QA:
 PDM-144: 125
@@ -363,7 +363,7 @@ PDM-144: 125
                 }
             };
 
-            var content = _mergeRequestMailContentGenerator.Generate(mergeRequests);
+            var content = _mergeRequestMailGenerator.GenerateMergeRequests(mergeRequests);
 
             Assert.AreEqual(@"DEV -> QA:
 PDM-144: 125,126

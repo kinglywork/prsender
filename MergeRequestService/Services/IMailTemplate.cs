@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MergeRequestService.Services
 {
-    public interface IMailContentTemplate
+    public interface IMailTemplate
     {
         /// <summary>
         /// FromBranch -> ToBranch
@@ -26,5 +26,7 @@ namespace MergeRequestService.Services
         /// Empty Line
         /// </summary>
         string GenerateNewLine();
+
+        string GenerateMailBody(string mergeRequests);
     }
 }
