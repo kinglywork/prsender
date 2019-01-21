@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 
 namespace MergeRequestService.Controllers
 {
-    [Authorize] // todo admin only
+    [Authorize(Roles = "admin")]
     public class MergeRequestMailPreviewController : Controller
     {
         private readonly MergeRequestContext _context;

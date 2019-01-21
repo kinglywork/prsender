@@ -38,11 +38,13 @@ namespace MergeRequestService
             services.AddDbContext<MergeRequestContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            
+
 //            services.AddHangfire(config =>
 //                config.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>()//todo disable register
+            services.AddDefaultIdentity<IdentityUser>() //todo disable register
+                .AddRoles<IdentityRole>()
+                .AddRoleManager<RoleManager<IdentityRole>>()
                 .AddEntityFrameworkStores<MergeRequestContext>();
 
             services.Configure<MailMessageConfig>(Configuration.GetSection(nameof(MailMessageConfig)));
@@ -58,7 +60,10 @@ namespace MergeRequestService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app,
+            IHostingEnvironment env,
+            UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -82,10 +87,12 @@ namespace MergeRequestService
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-            
+
 //            app.UseHangfireDashboard();
 //            app.UseHangfireServer();
             //todo hangfire is admin only 
+
+            UserDataInitializer.SeedData(userManager, roleManager);
         }
     }
 }
